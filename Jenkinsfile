@@ -3,9 +3,7 @@ pipeline {
     parameters {
         string(name: 'environment', defaultValue: 'terraform', description: 'Workspace/environment file to use for deployment')
         booleanParam(name: 'autoApprove', defaultValue: false, description: 'Automatically run apply after generating plan?')
-        choice (name: 'ACTION',
-				choices: [ 'plan', 'apply', 'destroy'],
-				description: 'Run terraform plan / apply / destroy')
+
     }
 
 
@@ -58,17 +56,6 @@ pipeline {
         stage('Apply') {
             steps {
                 sh "terraform apply -input=false tfplan"
-            }
-        }
-        
-        stage('Destroy') {
-            when { anyOf
-					{
-						environment name: 'ACTION', value: 'destroy';
-					}
-				}
-            steps {
-                sh "terraform destroy -auto-approve"
             }
         }
     }
